@@ -119,7 +119,7 @@ EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 MAILGUN_KEY = "key-ee56db9c07e16b20bb30954e93ff5f1d"
 REQUEST_URL = "https://api.mailgun.net/v3/tubebuses.com/messages"
 MAILGUN_ACCESS_KEY = MAILGUN_KEY
-MAILGUN_SERVER_NAME = 'tubebuses.com'
+MAILGUN_SERVER_NAME = 'bookworm.com'
 EMAIL_SUBJECT_PREFIX = "[Bookworm : Environment] "
 
 ADMINS = (
