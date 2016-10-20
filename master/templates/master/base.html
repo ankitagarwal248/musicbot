@@ -1,0 +1,156 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-control" content="public">
+
+    <!-- change this to make it mobile responsive -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="{% static "master/images/favicon.ico" %}" type="image/x-icon">
+    <link rel="icon" href="{% static "master/images/favicon.ico" %}" type="image/x-icon">
+
+
+    <title>{% block title %}{% endblock %} - Bookworm.com</title>
+    {% block above_base_css_files %}
+    {% endblock %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "master/css/bootstrap.min.css" %}" rel="stylesheet"/>
+    <link href="{% static "master/css/main.css" %}" rel="stylesheet"/>
+
+    <style media="screen">
+            .container {
+        max-width: none !important;
+        width: 1200px;
+        }
+        .navbar-header {
+          float: left;
+        }
+
+        .container>.navbar-header,
+        .container-fluid>.navbar-header,
+        .container>.navbar-collapse,
+        .container-fluid>.navbar-collapse {
+          margin-left: 0;
+          margin-right: 0;
+        }
+    </style>
+
+    {% block css_files %}
+
+    {% endblock %}
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div id="wrap">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" rel="home" href="/" title="Bookworm.com">
+                    <img style="max-width:200px; margin-top: -7px;"
+                         src="/static/master/images/Logo_final-02-01.png">
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                    {% if request.user.is_authenticated %}
+                        <li><a href="#">{{ user.username }}</a></li>
+                        <li><a href="#" class="dropdown-toggle" id="admin_dropdown" data-toggle="dropdown">Account<span
+                                class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="admin_dropdown">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/logout">Logout</a></li>
+                                <hr>
+                                <li><a style="color: white;font-size: x-small">{{ user.email }}</a></li>
+                            </ul>
+                        </li>
+
+                    {% else %}
+                        <li><a id="login-button" href="#">Login</a></li>
+                        <li><a id="signup-button" href="#">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    <br><br><br>
+
+    {% block bodycontent %}
+    {% endblock %}
+    <div id="push"></div>
+</div>
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li><a href="/about.html">About Us</a></li>
+                    <li> |</li>
+                    <li><a href="/contacts.html">Contact Us</a></li>
+                    <li> |</li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li> |</li>
+                    <li><a href="/terms.html">Terms and Conditions</a></li>
+                    <li> |</li>
+                    <li><a href="/refund.html">Refund Scheme</a></li>
+                    <li> |</li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li> |</li>
+                    <li><a href="/partners.html">Partners</a></li>
+                    <li> |</li>
+                    <li><a href="/pnr_search">Ticket</a></li>
+                    <li> |</li>
+                    <li><a href="/PNR_Tracking">Tracking</a></li>
+                </ul>
+            </div>
+            <div class="col-md-12 text-center">
+                <span class="copyright">Copyright &copy; Tubebus.com 2016</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="{% static "master/js/jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "master/js/bootstrap.min.js" %}"></script>
+{#<script type="text/javascript" src="{% static "userwebsite/js/flat-ui.min.js" %}"></script>#}
+
+{% block js_files %}
+{% endblock %}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+    });
+
+</script>
+
+
+{% block jscontent %}
+
+{% endblock %}
+
+</body>
+</html>
