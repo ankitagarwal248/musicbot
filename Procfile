@@ -1,1 +1,1 @@
-web: newrelic-admin run-program gunicorn tube_project.wsgi
+web: newrelic-admin run-program gunicorn tube_project.wsgi; python manage.py collectstatic --noinput
