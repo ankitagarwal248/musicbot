@@ -1,0 +1,13 @@
+Django==1.10.2
+argparse==1.2.1
+dj-database-url==0.4.1
+dj-static==0.0.6
+django-mailgun==0.9.1
+django-toolbelt==0.0.1
+gunicorn==19.6.0
+newrelic==2.72.0.52
+psycopg2==2.6.2
+requests==2.11.1
+six==1.10.0
+static3==0.7.0
+wsgiref==0.1.2
