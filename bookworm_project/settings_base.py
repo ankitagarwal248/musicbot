@@ -114,6 +114,7 @@ STATICFILES_DIRS = (
 )
 
 
+
 SENDER_EMAIL_ID = "Ankit Agarwal <ankitagarwal24.8@gmail.com>"
 
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
