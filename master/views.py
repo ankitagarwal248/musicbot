@@ -1,7 +1,21 @@
+import json
+
 from django.conf import settings
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 import requests
+
+
+def fbwebhook(request):
+    if request.GET['hub.verify_token'] == '123456789':
+        return HttpResponse(request.GET['hub.challenge'])
+    else:
+        return HttpResponse('Error, wrong validation token')
+
+    # data = {'status': 'pass'}
+    # data = json.dumps(data)
+    # return HttpResponse(data, content_type='application/json')
 
 
 def home(request):
