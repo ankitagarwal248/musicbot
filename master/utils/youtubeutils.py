@@ -8,11 +8,15 @@ import requests.packages.urllib3
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
 google_api_key = "AIzaSyCi3xrwwx3kB1POO4AVJPeWJQ95Q1ACuM8"
 
 
-def get_video_data(vid):
+def get_video_data(vids):
+
+    vid = ""
+    for i in vids:
+        vid = vid + i + ","
+
     url = "https://www.googleapis.com/youtube/v3/videos"
     params = {
         "id": vid,
@@ -21,35 +25,41 @@ def get_video_data(vid):
     }
 
     video_info = requests.get(url, params=params).json()
-    item = video_info['items'][0]
-    snippet = item.get('snippet')
-    content_details = item.get('contentDetails')
-    statistics = item.get('statistics')
+    items = video_info['items']
 
-    viewCount = statistics['viewCount']
-    likeCount = statistics['likeCount']
-    dislikeCount = statistics['dislikeCount']
-    favoriteCount = statistics['favoriteCount']
-    commentCount = statistics['commentCount']
+    videos_data = []
 
-    title = snippet['title']
-    thumbnail = snippet['thumbnails']['medium']['url']
-    channelTitle = snippet['channelTitle']
-    video_url = 'https://www.youtube.com/watch?v='+vid
+    for item in items:
+        snippet = item.get('snippet')
+        video_id = item.get('id')
+        content_details = item.get('contentDetails')
+        statistics = item.get('statistics')
+        viewCount = statistics['viewCount']
+        likeCount = statistics['likeCount']
+        dislikeCount = statistics['dislikeCount']
+        favoriteCount = statistics['favoriteCount']
+        commentCount = statistics.get('commentCount', '0')
 
-    data = {
-        'id': vid,
-        'title': title,
-        'url': video_url,
-        'thumbnail': thumbnail,
-        'channeltitle': channelTitle,
-        'viewcount': viewCount,
-        'likecount': likeCount,
-        'dislikecount': dislikeCount,
-        'favcount': favoriteCount,
-        'commentcount': commentCount,
-    }
-    return data
+        title = snippet['title']
+        thumbnail = snippet['thumbnails']['medium']['url']
+        channelTitle = snippet['channelTitle']
+        video_url = 'https://www.youtube.com/watch?v='+video_id
+
+        data = {
+            'id': video_id,
+            'title': title,
+            'url': video_url,
+            'thumbnail': thumbnail,
+            'channeltitle': channelTitle,
+            'viewcount': viewCount,
+            'likecount': likeCount,
+            'dislikecount': dislikeCount,
+            'favcount': favoriteCount,
+            'commentcount': commentCount,
+        }
+        videos_data.append(data)
+
+    return videos_data
 
 
 def get_mix_playlist(vid):
@@ -97,10 +107,21 @@ def search_youtube_video(query):
         'q': query,
         'type': 'video',
         'videoCategoryId': '10',
+        'maxResults': '1',
         'key': google_api_key,
     }
 
-    videos = requests.get(url, params=params).json()
+    video = requests.get(url, params=params).json()['items'][0]
+    vid = video['id']['videoId']
+    title = video['snippet']['title']
+    thumbnail = video['snippet']['thumbnails']['medium']['url']
+
+    data = {
+        'vid': vid,
+        'title': title,
+        'thumbnail': thumbnail
+    }
+    return data
 
 
 def get_related_videos(vid):
