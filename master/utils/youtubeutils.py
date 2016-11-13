@@ -34,10 +34,10 @@ def get_video_data(vids):
         video_id = item.get('id')
         content_details = item.get('contentDetails')
         statistics = item.get('statistics')
-        viewCount = statistics['viewCount']
-        likeCount = statistics['likeCount']
-        dislikeCount = statistics['dislikeCount']
-        favoriteCount = statistics['favoriteCount']
+        viewCount = statistics.get('viewCount', '0')
+        likeCount = statistics.get('likeCount', '0')
+        dislikeCount = statistics.get('dislikeCount', '0')
+        favoriteCount = statistics.get('favoriteCount', '0')
         commentCount = statistics.get('commentCount', '0')
 
         title = snippet['title']

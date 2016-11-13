@@ -10,6 +10,19 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class FbUser(BaseModel):
+    fbid = models.CharField(max_length=100, unique=True)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    gender = models.CharField(max_length=100, blank=True, null=True)
+    profile_pic = models.CharField(max_length=100, blank=True, null=True)
+    locale = models.CharField(max_length=100, blank=True, null=True)
+    timezone = models.CharField(max_length=100, blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode(self.first_name+":"+self.last_name)
+
+
 class Song(BaseModel):
     yt_id = models.CharField(max_length=100, unique=True)
     yt_title = models.CharField(max_length=100, blank=True, null=True)

@@ -50,7 +50,6 @@ def fill_yt_details_db_none():
         songs = songs[:40]
         song_ids = map(lambda x: x.yt_id, songs)
         videos_data = youtubeutils.get_video_data(song_ids)
-        print len(songs), len(videos_data)
         for v in videos_data:
             video_details = json.dumps(v)
             song_id = v['id']
@@ -61,16 +60,23 @@ def fill_yt_details_db_none():
 
 
 def fill_yt_details_db_all():
-    songs = Song.objects.all()
-    while songs:
-        songs = songs[:40]
+
+    size = 40
+    songs_count = Song.objects.all().count()
+    num_counters = int(songs_count/size)+1
+    i = 0
+
+    for y in range(i, num_counters):
+        print y, num_counters
+
+        songs = Song.objects.all()[i:i+size]
+        i += size
         song_ids = map(lambda x: x.yt_id, songs)
         videos_data = youtubeutils.get_video_data(song_ids)
-        print len(songs), len(videos_data)
         for v in videos_data:
             video_details = json.dumps(v)
             song_id = v['id']
             song = Song.objects.get(yt_id=song_id)
             song.yt_details = video_details
             song.save()
-        songs = Song.objects.all()
+
