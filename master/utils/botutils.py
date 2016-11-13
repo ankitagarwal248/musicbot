@@ -104,7 +104,8 @@ def create_find_fb_user(fbid):
                         profile_pic=data['profile_pic'],
                         locale=data['locale'],
                         timezone=data['timezone'],
-                        gender=data['gender']
+                        gender=data['gender'],
+                        state=json.dumps({'current_state': 'p0', 'last_state_data': {'state': '', 'response': ''}})
                         )
         fbuser.save()
 

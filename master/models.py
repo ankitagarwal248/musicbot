@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import json
+
 from django.db import models
 
 
@@ -18,9 +21,21 @@ class FbUser(BaseModel):
     profile_pic = models.CharField(max_length=100, blank=True, null=True)
     locale = models.CharField(max_length=100, blank=True, null=True)
     timezone = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=1000, blank=True, null=True)
 
     def __unicode__(self):
         return unicode(self.first_name+":"+self.last_name)
+
+    def userstate(self):
+        state = json.loads(self.state)['current_state']
+        return state
+
+    def setstate(self, state_code):
+        state = self
+        state_data = json.loads(state.state)
+        state_data['current_state'] = state_code
+        state.state = json.dumps(state_data)
+        state.save()
 
 
 class Song(BaseModel):

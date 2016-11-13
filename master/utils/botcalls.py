@@ -1,3 +1,4 @@
+import json
 from master.utils import bot_sample_calls
 from master.utils import botutils
 
@@ -12,51 +13,109 @@ def messageReceived(event):
     # appId = message['app_id']
     # metadata = message['metadata']
 
-    messageText = message.get('text')
+    print message
+
+    message_text = message.get('text')
     messageAttachment = message.get('attachment')
     quickReply = message.get('quick_reply')
-
     fbid = senderId
 
     if isEcho:
         print "echo"
         fbid = recipientId
         return True
-    elif quickReply:
-        print "quick reply"
-        bot_sample_calls.sendText(fbid, "Quick Reply Tapped")
-        return True
 
-    fbuser = botutils.create_find_fb_user(fbid)
-    print fbuser
-
-    if messageText:
-        messageText = messageText.lower()
-
-        if 'image' in messageText:
-            bot_sample_calls.sendImageMessage(fbid)
-        elif 'gif' in messageText:
-            bot_sample_calls.sendGifMessage(fbid)
-        elif 'audio' in messageText:
-            bot_sample_calls.sendAudioMessage(fbid)
-        elif 'video' in messageText:
-            bot_sample_calls.sendVideoMessage(fbid)
-        elif 'file' in messageText:
-            bot_sample_calls.sendFileMessage(fbid)
-        elif 'button' in messageText:
-            bot_sample_calls.sendButtonMessage(fbid)
-        elif 'generic' in messageText:
-            bot_sample_calls.sendGenericMessage(fbid)
-        elif 'quick reply' in messageText:
-            bot_sample_calls.sendQuickReply(fbid)
-        elif 'read receipt' in messageText:
-            bot_sample_calls.sendReadReceipt(fbid)
-        elif 'typing on' in messageText:
-            bot_sample_calls.sendTypingOn(fbid)
-        else:
-            bot_sample_calls.sendText(fbid, messageText)
-    elif messageAttachment:
+    if messageAttachment:
         bot_sample_calls.sendText(fbid, "message with attachment received")
 
-    return True
+    fbuser = botutils.create_find_fb_user(fbid)
+    userstate = fbuser.userstate()
+    print fbuser, userstate
 
+    if message_text:
+        message_text = message_text.lower()
+        if 'reset' in message_text:
+            fbuser.setstate('p0')
+            print "reset", fbuser.userstate()
+
+    userstate = fbuser.userstate()
+    if userstate == 'p0':
+        send_p1(fbuser)
+        return True
+
+    if userstate == 'p1':
+        page_response = check_response(message)
+        if page_response == 'r1':
+            send_p2(fbuser)
+        if page_response == 'r2':
+            send_p3(fbuser)
+
+        return True
+
+    if userstate == 'p2':
+        send_p4(fbuser, message)
+        return True
+
+
+def send_p4(fbuser, message):
+    print "sendp4"
+    message_text = message.get('text')
+    bot_sample_calls.sendText(fbuser.fbid, "Search results")
+    fbuser.setstate('p4')
+
+
+def send_p2(fbuser):
+    print "sendp2"
+    bot_sample_calls.sendText(fbuser.fbid, "Type the name of the song you wanna download")
+    fbuser.setstate('p2')
+
+
+def send_p3(fbuser):
+    print "sendp3"
+    bot_sample_calls.sendText(fbuser.fbid, "sendp3")
+    fbuser.setstate('p2')
+
+
+def send_p1(fbuser):
+    print "send p1"
+
+    data = {
+        'recipient': {
+            'id': fbuser.fbid
+        },
+        'message': {
+            'text': "What do you need?",
+            'quick_replies': [
+                {
+                    "content_type": "text",
+                    "title": "Search",
+                    "payload": json.dumps({'response': 'r1'})
+                },
+                {
+                    "content_type": "text",
+                    "title": "Get Top Songs",
+                    "payload": json.dumps({'response': 'r2'})
+                }
+            ]
+        }
+    }
+
+    fbuser.setstate('p1')
+    botutils.call_send_api(data)
+    userstate = fbuser.userstate()
+    print userstate
+
+
+def check_response(message):
+    print "check_response"
+
+    quick_reply = message.get('quick_reply')
+    if quick_reply:
+        payload = quick_reply.get('payload')
+        if payload:
+            payload = json.loads(payload)
+            response = payload.get('response')
+            if response:
+                return response
+
+    return None

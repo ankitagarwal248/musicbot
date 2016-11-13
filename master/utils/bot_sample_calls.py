@@ -234,7 +234,8 @@ def sendText(fbid, message):
             'id': fbid
         },
         'message': {
-            'text': message
+            'text': message,
+            'metadata': "this is metadata of text: "+ message
           }
     }
 
