@@ -110,3 +110,54 @@ def create_find_fb_user(fbid):
         fbuser.save()
 
     return fbuser
+
+
+def send_video_search_results(fbuser, search_results):
+    elements = []
+    for result in search_results:
+        vid = result['vid']
+        title = result['title']
+        thumbnail = result['thumbnail']
+        channeltitle = result['channeltitle']
+        yt_url = "https://www.youtube.com/watch?v="+vid
+        download_url = "https://0c6baaef.ngrok.io/download_url/?vid=" + vid
+
+        item = {
+                    'title': title,
+                    'subtitle': channeltitle,
+                    'item_url': yt_url,
+                    'image_url': thumbnail,
+                    'buttons': [
+                        {
+                            'type': "web_url",
+                            'url': yt_url,
+                            'title': "Open Video"
+                        },
+                        {
+                            "type": "web_url",
+                            "url": download_url,
+                            "title": "Download MP3",
+                            "webview_height_ratio": "compact"
+                        },
+                    ],
+                }
+        elements.append(item)
+
+    messageData = {
+        'recipient': {
+            'id': fbuser.fbid
+        },
+        'message': {
+            'attachment': {
+                'type': "template",
+                'payload': {
+                    'template_type': "generic",
+                    'elements': elements
+                }
+            }
+        }
+    }
+
+    call_send_api(messageData)
+
+    return None

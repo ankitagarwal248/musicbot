@@ -158,3 +158,33 @@ def get_related_videos_from_mix_playlist(vid):
     playlist_id = get_mix_playlist(vid)
     playlist_video_ids = playlist_items(playlist_id)
     return playlist_video_ids
+
+
+def search_youtube_videos(query):
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        'part': 'snippet',
+        'q': query,
+        'type': 'video',
+        'videoCategoryId': '10',
+        'maxResults': '5',
+        'key': google_api_key,
+    }
+
+    data = []
+    videos = requests.get(url, params=params).json()['items']
+    for video in videos:
+        vid = video['id']['videoId']
+        title = video['snippet']['title']
+        thumbnail = video['snippet']['thumbnails']['medium']['url']
+        channeltitle = video['snippet']['channelTitle']
+
+        vid_data = {
+            'vid': vid,
+            'title': title,
+            'thumbnail': thumbnail,
+            'channeltitle': channeltitle
+        }
+        data.append(vid_data)
+
+    return data

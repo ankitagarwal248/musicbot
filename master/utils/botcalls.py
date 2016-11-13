@@ -1,6 +1,7 @@
 import json
 from master.utils import bot_sample_calls
 from master.utils import botutils
+from master.utils import youtubeutils
 
 
 def messageReceived(event):
@@ -12,8 +13,6 @@ def messageReceived(event):
     # messageId = message['mid']
     # appId = message['app_id']
     # metadata = message['metadata']
-
-    print message
 
     message_text = message.get('text')
     messageAttachment = message.get('attachment')
@@ -61,6 +60,10 @@ def send_p4(fbuser, message):
     print "sendp4"
     message_text = message.get('text')
     bot_sample_calls.sendText(fbuser.fbid, "Search results")
+    bot_sample_calls.sendTypingOn(fbuser.fbid)
+    search_results = youtubeutils.search_youtube_videos(message_text)
+    botutils.send_video_search_results(fbuser, search_results)
+    send_reset_quick_reply(fbuser)
     fbuser.setstate('p4')
 
 
@@ -91,19 +94,38 @@ def send_p1(fbuser):
                     "title": "Search",
                     "payload": json.dumps({'response': 'r1'})
                 },
-                {
-                    "content_type": "text",
-                    "title": "Get Top Songs",
-                    "payload": json.dumps({'response': 'r2'})
-                }
+                # {
+                #     "content_type": "text",
+                #     "title": "Get Top Songs",
+                #     "payload": json.dumps({'response': 'r2'})
+                # }
             ]
         }
     }
 
     fbuser.setstate('p1')
     botutils.call_send_api(data)
-    userstate = fbuser.userstate()
-    print userstate
+
+
+def send_reset_quick_reply(fbuser):
+    print "send_reset_quick_reply"
+    data = {
+        'recipient': {
+            'id': fbuser.fbid
+        },
+        'message': {
+            'text': "Reset?",
+            'quick_replies': [
+                {
+                    "content_type": "text",
+                    "title": "Reset",
+                    "payload": json.dumps({'response': 'r3'})
+                }
+            ]
+        }
+    }
+
+    botutils.call_send_api(data)
 
 
 def check_response(message):
