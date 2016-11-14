@@ -10,7 +10,7 @@ if ENV == 'local':
 
 elif (ENV == 'staging') or (ENV == 'production'):
 
-    BASE_URL = "https://bookwormindia.herokuapp.com"
+    BASE_URL = "https://bookwormindia.herokuapp.com/"
     fb_access_token = "EAARqIqseANoBAOjI9MeAmHXDgDrAy5PuVmCEizRZC38B3baTd8NW9JgZBvwxCaLwb9CBUB22XRvwffPia3wWUZBJ3M4nj2pXbQeh3J3JuZALgn3CsZCvwDUtAwuSSsYE0dYKJH3wOEk7HEz3ZCVW1hxsi3pVzpbTF4bhiyTCga2gZDZD"
 
 
