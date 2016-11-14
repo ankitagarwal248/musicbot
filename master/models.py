@@ -22,6 +22,8 @@ class FbUser(BaseModel):
     locale = models.CharField(max_length=100, blank=True, null=True)
     timezone = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=1000, blank=True, null=True)
+    yt_access_token = models.CharField(max_length=1000, blank=True, null=True)
+    yt_refresh_token = models.CharField(max_length=1000, blank=True, null=True)
 
     def __unicode__(self):
         return unicode(self.first_name+":"+self.last_name)

@@ -1,6 +1,7 @@
 import json
 from master.utils import bot_sample_calls
 from master.utils import botutils
+from master.utils import credentials
 from master.utils import youtubeutils
 
 
@@ -63,7 +64,7 @@ def send_p4(fbuser, message):
     bot_sample_calls.sendTypingOn(fbuser.fbid)
     search_results = youtubeutils.search_youtube_videos(message_text)
     botutils.send_video_search_results(fbuser, search_results)
-    send_reset_quick_reply(fbuser)
+    # send_reset_quick_reply(fbuser)
     fbuser.setstate('p4')
 
 
@@ -73,10 +74,46 @@ def send_p2(fbuser):
     fbuser.setstate('p2')
 
 
+def send_auth_link_btn(fbid):
+    auth_uri = ('https://accounts.google.com/o/oauth2/v2/auth?response_type=code'
+                '&client_id={}&redirect_uri={}&scope={}&state=fbid{}'
+                '&access_type=offline&prompt=consent').format(credentials.CLIENT_ID, credentials.REDIRECT_URI, credentials.SCOPE, fbid)
+
+    messageData = {
+        'recipient': {
+            'id': fbid
+        },
+        'message': {
+            'attachment': {
+                'type': "template",
+                'payload': {
+                    'template_type': "button",
+                    'text': "Authorise Youtube?",
+                    'buttons': [
+                        {
+                            'type': "web_url",
+                            'url': auth_uri,
+                            'title': "Yes",
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    botutils.call_send_api(messageData)
+
+
 def send_p3(fbuser):
     print "sendp3"
-    bot_sample_calls.sendText(fbuser.fbid, "sendp3")
-    fbuser.setstate('p2')
+
+    access_token = fbuser.yt_access_token
+    if access_token:
+        send_liked_videos(fbuser)
+    else:
+        send_auth_link_btn(fbuser.fbid)
+
+    fbuser.setstate('p3')
 
 
 def send_p1(fbuser):
@@ -87,18 +124,18 @@ def send_p1(fbuser):
             'id': fbuser.fbid
         },
         'message': {
-            'text': "What do you need?",
+            'text': "Get Started!!",
             'quick_replies': [
                 {
                     "content_type": "text",
                     "title": "Search",
                     "payload": json.dumps({'response': 'r1'})
                 },
-                # {
-                #     "content_type": "text",
-                #     "title": "Get Top Songs",
-                #     "payload": json.dumps({'response': 'r2'})
-                # }
+                {
+                    "content_type": "text",
+                    "title": "Get Liked Songs",
+                    "payload": json.dumps({'response': 'r2'})
+                }
             ]
         }
     }
@@ -141,3 +178,18 @@ def check_response(message):
                 return response
 
     return None
+
+
+def send_after_registration_messages(fbuser):
+    bot_sample_calls.sendText(fbuser.fbid, "thanks for the registration")
+    send_liked_videos(fbuser)
+
+
+def send_liked_videos(fbuser):
+    bot_sample_calls.sendText(fbuser.fbid, "Your last ten liked videos")
+    bot_sample_calls.sendTypingOn(fbuser.fbid)
+    refresh_token = fbuser.yt_refresh_token
+    new_access_token = youtubeutils.get_new_access_token(refresh_token)
+    liked_videos = youtubeutils.get_liked_videos(new_access_token)
+    botutils.send_video_search_results(fbuser, liked_videos)
+    # send_reset_quick_reply(fbuser)

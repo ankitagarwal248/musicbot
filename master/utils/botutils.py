@@ -3,8 +3,7 @@ from master.models import *
 import pafy
 import requests
 
-
-access_token = "EAARqIqseANoBAOjI9MeAmHXDgDrAy5PuVmCEizRZC38B3baTd8NW9JgZBvwxCaLwb9CBUB22XRvwffPia3wWUZBJ3M4nj2pXbQeh3J3JuZALgn3CsZCvwDUtAwuSSsYE0dYKJH3wOEk7HEz3ZCVW1hxsi3pVzpbTF4bhiyTCga2gZDZD"
+from master.utils import credentials
 
 
 def send_generic_download_message(fbid, data):
@@ -70,7 +69,7 @@ def send_youtube_download_link(fbid):
 
 def call_send_api(message_data):
     print "send api called"
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token='+access_token
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token='+ credentials.fb_access_token
     message_data = json.dumps(message_data)
 
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=message_data)
@@ -78,7 +77,7 @@ def call_send_api(message_data):
 
 def get_fb_user_details(fbid):
     print "get_fb_user_details called"
-    full_url = "https://graph.facebook.com/v2.6/%s?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=%s"%(fbid, access_token)
+    full_url = "https://graph.facebook.com/v2.6/%s?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=%s"%(fbid, credentials.fb_access_token)
 
     user_details = requests.get(full_url).json()
     data = {}
@@ -154,7 +153,14 @@ def send_video_search_results(fbuser, search_results):
                     'template_type': "generic",
                     'elements': elements
                 }
-            }
+            },
+            'quick_replies': [
+                {
+                    "content_type": "text",
+                    "title": "Reset",
+                    "payload": json.dumps({'response': 'r3'})
+                }
+            ]
         }
     }
 

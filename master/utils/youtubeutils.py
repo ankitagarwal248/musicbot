@@ -188,3 +188,46 @@ def search_youtube_videos(query):
         data.append(vid_data)
 
     return data
+
+
+def get_liked_videos(access_token):
+
+    url = "https://www.googleapis.com/youtube/v3/videos"
+    params = {
+        'part': 'snippet',
+        'myRating': 'like',
+        'videoCategoryId': '10',
+        'maxResults': '10',
+        'access_token': access_token
+    }
+    videos = requests.get(url, params=params).json()['items']
+
+    data = []
+    for video in videos:
+        vid = video['id']
+        title = video['snippet']['title']
+        thumbnail = video['snippet']['thumbnails']['medium']['url']
+        channeltitle = video['snippet']['channelTitle']
+
+        vid_data = {
+            'vid': vid,
+            'title': title,
+            'thumbnail': thumbnail,
+            'channeltitle': channeltitle
+        }
+        data.append(vid_data)
+
+    return data
+
+
+def get_new_access_token(refresh_token):
+    url = "https://accounts.google.com/o/oauth2/token"
+    params = {
+        'client_id': '507175992320-br2pubjd7u0q7q9js6s6tq2dteidnorj.apps.googleusercontent.com',
+        'client_secret': 'HkVG1_P8i-xhkUrS02yaeaMP',
+        'refresh_token': refresh_token,
+        'grant_type': 'refresh_token'
+    }
+
+    access_token = requests.post(url=url, data=params).json().get('access_token')
+    return access_token

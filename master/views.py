@@ -1,14 +1,20 @@
 import json
 from django.conf import settings
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
 import requests
 from django.views.decorators.csrf import csrf_exempt
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import requests.packages.urllib3
+
+from master.utils import bot_sample_calls
 from master.utils import botcalls
+from master.utils import credentials
 from master.utils.bot_sample_calls import sendText
+from master.models import *
+from oauth2client import client
+
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -19,7 +25,7 @@ def fbwebhook(request):
     print "fbwehook called"
 
     if request.method == 'GET':
-        if request.GET['hub.verify_token'] == '123456789':
+        if request.GET['hub.verify_token'] == credentials.fb_hook_verify_token:
             return HttpResponse(request.GET['hub.challenge'], content_type='application/json')
         else:
             return HttpResponse('Error, wrong validation token', content_type='application/json')
@@ -100,3 +106,34 @@ def download_url(request):
         'vid': vid
     }
     return render(request, 'master/home.html', data)
+
+
+def googleoauth2callback(request):
+    auth_code = request.GET.get('code')
+    if auth_code:
+        data = {'code': auth_code,
+                'client_id': credentials.CLIENT_ID,
+                'client_secret': credentials.CLIENT_SECRET,
+                'redirect_uri': credentials.REDIRECT_URI,
+                'grant_type': 'authorization_code',
+                }
+        r = requests.post('https://www.googleapis.com/oauth2/v4/token', data=data).json()
+
+        access_token = r.get("access_token")
+        refresh_token = r.get("refresh_token")
+        fbid = request.GET.get('state').replace("fbid", "")
+
+        fbuser = FbUser.objects.get(fbid=fbid)
+        fbuser.yt_access_token = access_token
+        fbuser.yt_refresh_token = refresh_token
+        fbuser.save()
+        botcalls.send_after_registration_messages(fbuser)
+
+        # return HttpResponseRedirect("/google_auth_success")
+
+        return HttpResponse("Thanks for the registration, you can now go back to the messanger. Thanks!")
+    return HttpResponse("can't find oauth code!!")
+
+
+def google_auth_success(request):
+    return HttpResponseRedirect("https://m.me/musicfeedbot")
