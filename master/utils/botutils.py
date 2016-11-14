@@ -97,6 +97,7 @@ def create_find_fb_user(fbid):
         fbuser = fbuser[0]
     else:
         data = get_fb_user_details(fbid)
+        print data
         fbuser = FbUser(fbid=fbid,
                         first_name=data['first_name'],
                         last_name=data['last_name'],

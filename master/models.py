@@ -18,7 +18,7 @@ class FbUser(BaseModel):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     gender = models.CharField(max_length=100, blank=True, null=True)
-    profile_pic = models.CharField(max_length=100, blank=True, null=True)
+    profile_pic = models.CharField(max_length=1000, blank=True, null=True)
     locale = models.CharField(max_length=100, blank=True, null=True)
     timezone = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=1000, blank=True, null=True)

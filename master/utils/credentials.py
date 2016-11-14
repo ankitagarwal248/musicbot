@@ -6,7 +6,7 @@ BASE_URL = ""
 if ENV == 'local':
 
     BASE_URL = "https://0c6baaef.ngrok.io/"
-    fb_access_token = "EAAYIkWuA6c0BAG1T1sdnU6QsCL4Sn3PIDasxNOPI7wdSTjTMZARucWiJEjt0Vv7VZBOY4PcainZC0xcIvpxcPc9Y88tSw33nkBoNuUWYJLu0eoYN3HTSfE71RpZBejZBiuiISr0g4sjZBXlBNVCJqjZBiZBZCF7blY4UqZCVexL10fSgZDZD"
+    fb_access_token = "EAAYIkWuA6c0BABPgDwaRwnaJso5WzKY9AQxixjrjz8h0eKzRMpifBS072CtQ4p8uTkSKxQk2Bsuho1X5P8KODDlHXNsYB9iqYosYjxygw3qpIOIckHi5DtkNLBbZABWYjOd4ZCT6aFEMvd1lGZCnKr49BIcQ2H8Tl68ZCnUavAZDZD"
 
 elif (ENV == 'staging') or (ENV == 'production'):
 
