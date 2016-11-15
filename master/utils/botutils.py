@@ -120,7 +120,7 @@ def send_video_search_results(fbuser, search_results):
         thumbnail = result['thumbnail']
         channeltitle = result['channeltitle']
         yt_url = "https://www.youtube.com/watch?v="+vid
-        download_url = "https://0c6baaef.ngrok.io/download_url/?vid=" + vid
+        download_url = credentials.BASE_URL + "download_url/?vid=" + vid
 
         item = {
                     'title': title,
