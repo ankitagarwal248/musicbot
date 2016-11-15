@@ -1,3 +1,5 @@
+import json
+
 from master.utils import pafyutils
 from master.utils.botutils import call_send_api
 
@@ -235,7 +237,14 @@ def sendText(fbid, message):
         },
         'message': {
             'text': message,
-            'metadata': "this is metadata of text: "+ message
+            'metadata': "this is metadata of text: "+ message,
+            'quick_replies': [
+                {
+                    "content_type": "text",
+                    "title": "Reset",
+                    "payload": json.dumps({'response': 'r3'})
+                }
+            ]
           }
     }
 

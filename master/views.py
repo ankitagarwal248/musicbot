@@ -50,7 +50,7 @@ def fbwebhook(request):
                     pass
 
                 elif 'postback' in message:
-                    sendText(fbid, "postback received")
+                    botcalls.postbackReceived(message)
 
                 elif 'optin' in message:
                     sendText(fbid, "optin")

@@ -45,10 +45,13 @@ def messageReceived(event):
 
     if userstate == 'p1':
         page_response = check_response(message)
-        if page_response == 'r1':
-            send_p2(fbuser)
-        if page_response == 'r2':
-            send_p3(fbuser)
+        if page_response:
+            if page_response == 'r1':
+                send_p2(fbuser)
+            if page_response == 'r2':
+                send_p3(fbuser)
+        else:
+            send_p1(fbuser)
 
         return True
 
@@ -88,12 +91,17 @@ def send_auth_link_btn(fbid):
                 'type': "template",
                 'payload': {
                     'template_type': "button",
-                    'text': "Authorise Youtube?",
+                    'text': "Authorise YouTube?",
                     'buttons': [
                         {
                             'type': "web_url",
                             'url': auth_uri,
                             'title': "Yes",
+                        },
+                        {
+                            "type": "postback",
+                            "title": "No",
+                            "payload": json.dumps({'response': 'r3'})
                         }
                     ]
                 }
@@ -193,3 +201,31 @@ def send_liked_videos(fbuser):
     liked_videos = youtubeutils.get_liked_videos(new_access_token)
     botutils.send_video_search_results(fbuser, liked_videos)
     # send_reset_quick_reply(fbuser)
+
+
+def postbackReceived(event):
+    print "postbackReceived called"
+
+    s = {
+        u'timestamp': 1479218513945,
+        u'postback':
+            {u'payload': u'{"response": "r3"}'
+             },
+        u'recipient': {u'id': u'157955300922253'},
+        u'sender': {u'id': u'1150296141673799'}
+    }
+
+
+    postback_payload = event.get('postback').get('payload')
+    postback_payload = json.loads(postback_payload)
+    senderId = event['sender']['id']
+    recipientId = event['recipient']['id']
+    fbid = senderId
+    fbuser = botutils.create_find_fb_user(fbid)
+    userstate = fbuser.userstate()
+    print fbuser, userstate
+
+    postback_response = postback_payload.get('response')
+
+    if postback_response == 'r3':
+        send_p1(fbuser)
