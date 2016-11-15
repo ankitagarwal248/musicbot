@@ -186,7 +186,7 @@ def send_after_registration_messages(fbuser):
 
 
 def send_liked_videos(fbuser):
-    bot_sample_calls.sendText(fbuser.fbid, "Your last ten liked videos")
+    bot_sample_calls.sendText(fbuser.fbid, "Your last 10 liked music videos")
     bot_sample_calls.sendTypingOn(fbuser.fbid)
     refresh_token = fbuser.yt_refresh_token
     new_access_token = youtubeutils.get_new_access_token(refresh_token)

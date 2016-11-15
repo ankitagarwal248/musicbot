@@ -196,28 +196,30 @@ def get_liked_videos(access_token):
     params = {
         'part': 'snippet',
         'myRating': 'like',
-        'videoCategoryId': '10',
-        'maxResults': '10',
+        'maxResults': '20',
         'access_token': access_token
     }
     videos = requests.get(url, params=params).json()['items']
 
     data = []
     for video in videos:
-        vid = video['id']
-        title = video['snippet']['title']
-        thumbnail = video['snippet']['thumbnails']['medium']['url']
-        channeltitle = video['snippet']['channelTitle']
+        accpted_category_ids = ['10']
+        category_id = video['snippet']['categoryId']
 
-        vid_data = {
-            'vid': vid,
-            'title': title,
-            'thumbnail': thumbnail,
-            'channeltitle': channeltitle
-        }
-        data.append(vid_data)
+        if category_id in accpted_category_ids:
+            vid = video['id']
+            title = video['snippet']['title']
+            thumbnail = video['snippet']['thumbnails']['medium']['url']
+            channeltitle = video['snippet']['channelTitle']
 
-    return data
+            vid_data = {
+                'vid': vid,
+                'title': title,
+                'thumbnail': thumbnail,
+                'channeltitle': channeltitle
+            }
+            data.append(vid_data)
+    return data[:10]
 
 
 def get_new_access_token(refresh_token):

@@ -113,6 +113,7 @@ def create_find_fb_user(fbid):
 
 
 def send_video_search_results(fbuser, search_results):
+    print search_results, "-------------------"
     elements = []
     for result in search_results:
         vid = result['vid']
@@ -165,6 +166,5 @@ def send_video_search_results(fbuser, search_results):
         }
     }
 
+    print messageData, "-------------"
     call_send_api(messageData)
-
-    return None
