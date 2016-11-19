@@ -137,3 +137,7 @@ def googleoauth2callback(request):
 
 def google_auth_success(request):
     return HttpResponseRedirect("https://m.me/musicfeedbot")
+
+
+def privacy_policy(request):
+    return render(request, 'master/privacypolicy.html', {})

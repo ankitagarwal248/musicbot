@@ -73,7 +73,7 @@ def send_p4(fbuser, message):
 
 def send_p2(fbuser):
     print "sendp2"
-    bot_sample_calls.sendText(fbuser.fbid, "Type the name of the song you wanna download")
+    bot_sample_calls.sendText(fbuser.fbid, "Type a song's name..")
     fbuser.setstate('p2')
 
 
