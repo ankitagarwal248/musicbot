@@ -134,12 +134,12 @@ def send_video_search_results(fbuser, search_results):
                             'url': yt_url,
                             'title': "Open Video"
                         },
-                        # {
-                        #     "type": "web_url",
-                        #     "url": download_url,
-                        #     "title": "Download MP3",
-                        #     "webview_height_ratio": "compact"
-                        # },
+                        {
+                            "type": "web_url",
+                            "url": download_url,
+                            "title": "Download MP3",
+                            "webview_height_ratio": "compact"
+                        },
                     ],
                 }
         elements.append(item)
